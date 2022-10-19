@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MediaCapture and Streams API</title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <header>
+        <h1>MediaCapture, MediaRecorder and Streams API</h1>
+    </header>
+    <main>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Impedit molestiae itaque facere totam saepe tempore esse temporibus, quae reprehenderit aliquid iusto ea laborum, iure eligendi odio exercitationem sapiente illum quos.</p>
+        
+        <p><button id="btnStart">START RECORDING</button><br/>
+        <button id="btnStop">STOP RECORDING</button><br/>
+        <button id="btnResume">Resume</button><br/>
+        <button id="btnPause">PAUSE</button></p>
+        
+        <button id="notify">notify</button></p>
+        
+        <video controls></video>
+        
+        <video id="vid2" controls></video>
+        
+        <!-- could save to canvas and do image manipulation and saving too -->
+    </main>    
+    <script>
+        
+        let constraintObj = { 
+            audio: false, 
+            video: { 
+                facingMode: "user", 
+                width: { min: 640, ideal: 1280, max: 1920 },
+                height: { min: 480, ideal: 720, max: 1080 } 
+            } 
+        }; 
+        // width: 1280, height: 720  -- preference only
+        // facingMode: {exact: "user"}
+        // facingMode: "environment"
+        
+        //handle older browsers that might implement getUserMedia in some way
+        if (navigator.mediaDevices === undefined) {
+            navigator.mediaDevices = {};
+            navigator.mediaDevices.getUserMedia = function(constraintObj) {
+                let getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+                if (!getUserMedia) {
+                    return Promise.reject(new Error('getUserMedia is not implemented in this browser'));
+                }
+                return new Promise(function(resolve, reject) {
+                    getUserMedia.call(navigator, constraintObj, resolve, reject);
+                });
+            }
+        }else{
+            navigator.mediaDevices.enumerateDevices()
+            .then(devices => {
+                devices.forEach(device=>{
+                    console.log(device.kind.toUpperCase(), device.label);
+                    //, device.deviceId
+                })
+            })
+            .catch(err=>{
+                console.log(err.name, err.message);
+            })
+        }
+
+        navigator.mediaDevices.getUserMedia(constraintObj)
+        .then(function(mediaStreamObj) {
+            //connect the media stream to the first video element
+            let video = document.querySelector('video');
+            //  const RRecorder = new MediaRecorder(mediaStreamObj);
+            //  const myStream = RRecorder.stream;
+            //  console.log(myStream);
+            if ("srcObject" in video) {
+                video.srcObject = mediaStreamObj;
+            } else {
+                //old version
+                video.src = window.URL.createObjectURL(mediaStreamObj);
+            }
+            
+            video.onloadedmetadata = function(ev) {
+                //console.log(ev.data);
+                //show in the video element what is being captured by the webcam
+                video.play();
+            };
+            
+            //add listeners for saving video/audio
+            let start = document.getElementById('btnStart');
+            let stop = document.getElementById('btnStop');
+            let pause = document.getElementById('btnPause');
+            let resume = document.getElementById('btnResume');
+            let vidSave = document.getElementById('vid2');
+            const options = {
+                audioBitsPerSecond: 128000,
+                videoBitsPerSecond: 2500000,
+                // mimeType: 'video/webm\;codecs=h264'
+                mimeType: 'video/webm\;codecs=h264',
+            }
+            let mediaRecorder = new MediaRecorder(mediaStreamObj);
+            console.log(mediaRecorder);
+            const types = ["video/webm",
+             "audio/webm",
+             "video/webm\;codecs=vp8",
+             "video/webm\;codecs=daala",
+             "video/webm\;codecs=h264",
+             "audio/webm\;codecs=opus",
+             "video/mpeg"];
+
+            // for (let i in types) {
+            // console.log( "Is " + types[i] + " supported? " + (MediaRecorder.isTypeSupported(types[i]) ? "Maybe!" : "Nope :("));
+            // }
+            let chunks = [];
+            
+            start.addEventListener('click', (ev)=>{
+                mediaRecorder.start();
+                console.log(mediaRecorder.state);
+            })
+            stop.addEventListener('click', (ev)=>{
+                mediaRecorder.stop();
+                console.log(mediaRecorder.state);
+            });
+            pause.addEventListener('click', (ev)=>{
+                if(mediaRecorder.state === "recording") {
+                   mediaRecorder.pause();
+                    // resume recording
+                }
+                console.log(mediaRecorder.state);
+            });
+            resume.addEventListener('click', (ev)=>{
+                if(mediaRecorder.state === "paused") {
+                    mediaRecorder.resume();
+                    
+                    // resume recording
+                }
+                console.log(mediaRecorder.state);
+            });
+            mediaRecorder.ondataavailable = function(ev) {
+                chunks.push(ev.data);
+                console.log(ev.data);
+            }
+            mediaRecorder.onstop = (ev)=>{
+                let blob = new Blob(chunks, { 'type' : 'video/mp4;' });
+                chunks = [];
+                let videoURL = window.URL.createObjectURL(blob);
+                vidSave.src = videoURL;
+            }
+            mediaRecorder.onpause = function() {
+                alert("pause");
+            }
+            mediaRecorder.onresume = function() {
+                alert("Resume");
+            }
+        })
+        .catch(function(err) { 
+            console.log(err.name, err.message); 
+        });
+        
+        /*********************************
+        getUserMedia returns a Promise
+        resolve - returns a MediaStream Object
+        reject returns one of the following errors
+        AbortError - generic unknown cause
+        NotAllowedError (SecurityError) - user rejected permissions
+        NotFoundError - missing media track
+        NotReadableError - user permissions given but hardware/OS error
+        OverconstrainedError - constraint video settings preventing
+        TypeError - audio: false, video: false
+        *********************************/
+    </script>
+    <script>
+        var connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        var type = connection.effectiveType;
+       
+
+        function updateConnectionStatus() {
+            console.log("Connection type changed from " + type + " to " + connection.effectiveType);
+            type = connection.effectiveType;
+        }
+
+        connection.addEventListener('change', updateConnectionStatus);
+         console.table(connection);
+    </script>
+    <script>
+        function notifyMe() {
+            var options = {
+                body: 'Do you like my body?',
+                vibrate: [200, 100, 200]
+            }
+            // Let's check if the browser supports notifications
+            if (!("Notification" in window)) {
+                alert("This browser does not support desktop notification");
+            }
+
+            // Let's check whether notification permissions have already been granted
+            else if (Notification.permission === "granted" ) {
+                // If it's okay let's create a notification
+                var notification = new Notification("Hi there!",options);
+            }
+
+            // Otherwise, we need to ask the user for permission
+            else if (Notification.permission !== "denied") {
+                Notification.requestPermission().then(function (permission) {
+                        // If the user accepts, let's create a notification
+                        if (permission === "granted") {
+                            var notification = new Notification("Hi there!",options);
+                        }
+                });
+            }
+         }
+        // At last, if the user has denied notifications, and you
+        // want to be respectful there is no need to bother them anymore.
+
+    </script>
+</body>
+</html>
