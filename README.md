@@ -46,7 +46,7 @@ C --> F
 D --> F
 class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z internal-link;
 ```
----
+
 ## Quick Guide
 ### Admin previlage
 - Admin has ablity to create a assert item and added to inventory.
@@ -59,7 +59,6 @@ class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z internal-link;
 - Assert items are assigned to employee can able to listed for records.
 - Can able to report or raised a ticket on giving assert items.
 
----
 ## Features
 - Employee can able to raise a ticket on his assigned item. Raised ticket is assigned to Assert manager
 - All members has enabled chat
