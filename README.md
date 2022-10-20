@@ -1,4 +1,4 @@
-# Assert-Mangement
+# Assert-Management
 # Set-Up
   After installing the source adding to localhost hosted folder open path via CLI and run composer to install Dependencies.
   ```cli 
