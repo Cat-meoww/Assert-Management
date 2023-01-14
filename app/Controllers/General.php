@@ -12,6 +12,12 @@ use Config\Services;
 
 class General extends BaseController
 {
+    public $session;
+    public $db;
+    public $usermodel;
+    public $data;
+    public $date;
+    
     public function __construct()
     {
         $this->session = session();

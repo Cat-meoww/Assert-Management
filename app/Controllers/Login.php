@@ -9,6 +9,8 @@ use CodeIgniter\Cookie\Cookie;
 
 class Login extends BaseController
 {
+    public $session;
+    public $usermodel;
     public function __construct()
     {
         helper('cookie');
