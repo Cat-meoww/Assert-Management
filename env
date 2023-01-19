@@ -41,7 +41,7 @@ app.baseURL = 'http://localhost/github/ir/'
 database.default.hostname = localhost
 database.default.database = inventory
 database.default.username = root
-database.default.password =
+database.default.password =mariadb
 database.default.DBDriver = MySQLi
 
 # app.forceGlobalSecureRequests = false
