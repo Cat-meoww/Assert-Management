@@ -45,8 +45,8 @@ $routes->group('auth', function ($routes) {
 });
 $routes->group('global', function ($routes) {
     $routes->add('login', 'Login::index');
-    $routes->add('chat', 'general::global_chat');
-    $routes->add('inventory', 'general::admin_inventory');
+    $routes->add('chat', 'General::global_chat');
+    $routes->add('inventory', 'General::admin_inventory');
 });
 $routes->group('admin', ['namespace' => 'App\Controllers\admin'], function ($routes) {
     $routes->add('dashboard', 'admin::index');
@@ -59,14 +59,14 @@ $routes->group('admin', ['namespace' => 'App\Controllers\admin'], function ($rou
     $routes->add('user-creation', 'admin::user_creation');
 });
 $routes->group('maintainer', ['namespace' => 'App\Controllers\Maintainer'], function ($routes) {
-    $routes->add('dashboard', 'maintainer::index');
-    $routes->add('my-assert', 'maintainer::assigned_assert');
-    $routes->add('ticket', 'maintainer::ticket_view');
+    $routes->add('dashboard', 'Maintainer::index');
+    $routes->add('my-assert', 'Maintainer::assigned_assert');
+    $routes->add('ticket', 'Maintainer::ticket_view');
 });
 $routes->group('staff', ['namespace' => 'App\Controllers\Staff'], function ($routes) {
-    $routes->add('dashboard', 'staff::index');
-    $routes->add('my-assert', 'staff::assigned_assert');
-    $routes->add('ticket', 'staff::ticket_view');
+    $routes->add('dashboard', 'Staff::index');
+    $routes->add('my-assert', 'Staff::assigned_assert');
+    $routes->add('ticket', 'Staff::ticket_view');
 });
 // $routes->group('all-master-save', function ($routes) {
 //     $routes->post('product-type', 'General::post_create_product_type');
@@ -78,28 +78,28 @@ $routes->group('staff', ['namespace' => 'App\Controllers\Staff'], function ($rou
 //     $routes->post('maintainer-assign-update', 'General::post_update_assigner');
 // });
 $routes->group('all-master-save', ['namespace' => 'App\Controllers\API'], function ($routes) {
-    $routes->post('product-type', 'all_master::post_create_product_type');
-    $routes->post('product-category', 'all_master::post_create_product_category');
-    $routes->post('product-sub-category', 'all_master::post_create_product_sub_category');
-    $routes->post('create-product', 'all_master::post_create_product');
-    $routes->post('create-ticket-titles', 'all_master::post_create_tickets_titles');
-    $routes->post('inventory', 'all_master::post_add_product');
-    $routes->post('maintainer-assign-update', 'all_master::post_update_assigner');
-    $routes->post('user-creation', 'all_master::user_creation');
+    $routes->post('product-type', 'All_master::post_create_product_type');
+    $routes->post('product-category', 'All_master::post_create_product_category');
+    $routes->post('product-sub-category', 'All_master::post_create_product_sub_category');
+    $routes->post('create-product', 'All_master::post_create_product');
+    $routes->post('create-ticket-titles', 'All_master::post_create_tickets_titles');
+    $routes->post('inventory', 'All_master::post_add_product');
+    $routes->post('maintainer-assign-update', 'All_master::post_update_assigner');
+    $routes->post('user-creation', 'All_master::user_creation');
 });
 $routes->group('api', ['namespace' => 'App\Controllers\API'], static function ($routes) {
-    $routes->add('show-product-datatable', 'general_api::product_datatable');
-    $routes->add('show-admin-inventory-datatable', 'general_api::admin_inventory_datatable');
-    $routes->add('show-maintainer-inventory-datatable', 'general_api::maintainer_inventory_datatable');
-    $routes->add('show-staff-inventory-datatable', 'general_api::staff_inventory_datatable');
-    $routes->post('update-product-status', 'general_api::update_product_status');
-    $routes->post('update-repair-upgrade', 'general_api::update_repair_upgrade');
-    $routes->post('get-assert-timeline', 'general_api::get_assert_timeline');
-    $routes->post('post-ticket-raiser', 'general_api::raise_ticket');
-    $routes->post('get-maintainer-tickets', 'general_api::lazy_maintainer_tickets');
-    $routes->post('get-maintainer-tickets', 'general_api::lazy_maintainer_tickets');
-    $routes->post('complete-ticket', 'general_api::complete_ticket');
-    $routes->post('get_chat_data', 'general_api::get_chart_data');
+    $routes->add('show-product-datatable', 'General_api::product_datatable');
+    $routes->add('show-admin-inventory-datatable', 'General_api::admin_inventory_datatable');
+    $routes->add('show-maintainer-inventory-datatable', 'General_api::maintainer_inventory_datatable');
+    $routes->add('show-staff-inventory-datatable', 'General_api::staff_inventory_datatable');
+    $routes->post('update-product-status', 'General_api::update_product_status');
+    $routes->post('update-repair-upgrade', 'General_api::update_repair_upgrade');
+    $routes->post('get-assert-timeline', 'General_api::get_assert_timeline');
+    $routes->post('post-ticket-raiser', 'General_api::raise_ticket');
+    $routes->post('get-maintainer-tickets', 'General_api::lazy_maintainer_tickets');
+    $routes->post('get-maintainer-tickets', 'General_api::lazy_maintainer_tickets');
+    $routes->post('complete-ticket', 'General_api::complete_ticket');
+    $routes->post('get_chat_data', 'General_api::get_chart_data');
 });
 $routes->group('api/dashboard', ['namespace' => 'App\Controllers\API'], static function ($routes) {
     $routes->add('get-ticket-report', 'Dashboard::ticket_chart');

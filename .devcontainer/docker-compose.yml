@@ -2,10 +2,13 @@ version: '3.8'
 
 services: 
   app:
+    depends_on:
+      - db
     build:
       context: .
       dockerfile: Dockerfile
-
+    environment:
+      - CI_ENVIRONMENT=developmentserver
     volumes:
       - ../..:/workspaces:cached
 
